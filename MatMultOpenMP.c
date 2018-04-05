@@ -1130,19 +1130,21 @@ void optim_omp_g (int n, int t, double **A, double **B, double **C) {
 //--
 void block_serial (int n, int b, double **A, double **B, double **C) {
 
-  int i, j, k, ii, jj, kk;
+  int i, j, k, en, jj, kk;
+  double sum = 0.0;
+  en = b * (n/b);
 
   time_begin = omp_get_wtime();
 
-  for (i = 0; i < n; i += b) {
-    for (j = 0; j < n; j += b) {
-      for (k = 0; k < n; k += b) {
-        for (ii = i; ii < i+b; ii++) {
-          for (jj = j; jj < j+b; jj++) {
-            for (kk = k; kk < k+b; kk++) {
-              A[ii][jj] += B[ii][kk] * C[kk][jj];
-            }
+  for (kk = 0; kk < en; kk += b) {
+    for (jj = 0; jj < en; jj += b) {
+      for (i = 0; i < n; i++) {
+        for (j = jj; j < jj+b; j++) {
+          sum = A[i][j];
+          for (k = kk; k < kk+b; k++) {
+              sum += B[i][k] * B[k][j];
           }
+          A[i][j] = sum;
         }
       }
     }
@@ -1164,6 +1166,33 @@ void block_omp_s (int n, int t, int b, double **A, double **B, double **C) {
   //--
   omp_set_num_threads(t);
 
+  int i, j, k, en, jj, kk;
+  double sum = 0.0;
+  en = b * (n/b);
+
+  time_begin = omp_get_wtime();
+
+  #pragma omp parallel	      \
+  shared  (A, B, C, n, en)		\
+  private (i, j, k, jj, kk)
+  for (kk = 0; kk < en; kk += b) {
+    for (jj = 0; jj < en; jj += b) {
+      #pragma omp for schedule(static)
+      for (i = 0; i < n; i++) {
+        for (j = jj; j < jj+b; j++) {
+          sum = A[i][j];
+          for (k = kk; k < kk+b; k++) {
+              sum += B[i][k] * B[k][j];
+          }
+          A[i][j] = sum;
+        }
+      }
+    }
+  }
+
+  time_stop = omp_get_wtime();
+
+  /*
   int i, j, k, ii, jj, kk;
 
   time_begin = omp_get_wtime();
@@ -1187,6 +1216,7 @@ void block_omp_s (int n, int t, int b, double **A, double **B, double **C) {
   }
 
   time_stop = omp_get_wtime();
+  */
 }
 
 
@@ -1202,6 +1232,33 @@ void block_omp_d (int n, int t, int b, double **A, double **B, double **C) {
   //--
   omp_set_num_threads(t);
 
+  int i, j, k, en, jj, kk;
+  double sum = 0.0;
+  en = b * (n/b);
+
+  time_begin = omp_get_wtime();
+
+  #pragma omp parallel	      \
+  shared  (A, B, C, n, en)		\
+  private (i, j, k, jj, kk)
+  for (kk = 0; kk < en; kk += b) {
+    for (jj = 0; jj < en; jj += b) {
+      #pragma omp for schedule(dynamic)
+      for (i = 0; i < n; i++) {
+        for (j = jj; j < jj+b; j++) {
+          sum = A[i][j];
+          for (k = kk; k < kk+b; k++) {
+              sum += B[i][k] * B[k][j];
+          }
+          A[i][j] = sum;
+        }
+      }
+    }
+  }
+
+  time_stop = omp_get_wtime();
+
+  /*
   int i, j, k, ii, jj, kk;
 
   time_begin = omp_get_wtime();
@@ -1225,7 +1282,7 @@ void block_omp_d (int n, int t, int b, double **A, double **B, double **C) {
   }
 
   time_stop = omp_get_wtime();
-
+  */
 }
 
 
@@ -1241,6 +1298,33 @@ void block_omp_g (int n, int t, int b, double **A, double **B, double **C) {
   //--
   omp_set_num_threads(t);
 
+  int i, j, k, en, jj, kk;
+  double sum = 0.0;
+  en = b * (n/b);
+
+  time_begin = omp_get_wtime();
+
+  #pragma omp parallel	      \
+  shared  (A, B, C, n, en)		\
+  private (i, j, k, jj, kk)
+  for (kk = 0; kk < en; kk += b) {
+    for (jj = 0; jj < en; jj += b) {
+      #pragma omp for schedule(guided)
+      for (i = 0; i < n; i++) {
+        for (j = jj; j < jj+b; j++) {
+          sum = A[i][j];
+          for (k = kk; k < kk+b; k++) {
+              sum += B[i][k] * B[k][j];
+          }
+          A[i][j] = sum;
+        }
+      }
+    }
+  }
+
+  time_stop = omp_get_wtime();
+
+  /*
   int i, j, k, ii, jj, kk;
 
   time_begin = omp_get_wtime();
@@ -1264,6 +1348,5 @@ void block_omp_g (int n, int t, int b, double **A, double **B, double **C) {
   }
 
   time_stop = omp_get_wtime();
-
-
+  */
 }
