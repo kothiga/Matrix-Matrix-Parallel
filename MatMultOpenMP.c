@@ -1142,7 +1142,7 @@ void block_serial (int n, int b, double **A, double **B, double **C) {
         for (j = jj; j < jj+b; j++) {
           sum = A[i][j];
           for (k = kk; k < kk+b; k++) {
-              sum += B[i][k] * B[k][j];
+              sum += B[i][k] * C[k][j];
           }
           A[i][j] = sum;
         }
@@ -1166,23 +1166,23 @@ void block_omp_s (int n, int t, int b, double **A, double **B, double **C) {
   //--
   omp_set_num_threads(t);
 
-  int i, j, k, en, jj, kk;
+  int i, j, k, jj, kk;
   double sum = 0.0;
-  en = b * (n/b);
+  int en = b * (n / b);
 
   time_begin = omp_get_wtime();
 
   #pragma omp parallel	      \
   shared  (A, B, C, n, en)		\
-  private (i, j, k, jj, kk)
+  private (i, j, k, jj, kk, sum)
   for (kk = 0; kk < en; kk += b) {
     for (jj = 0; jj < en; jj += b) {
-      #pragma omp for schedule(static)
       for (i = 0; i < n; i++) {
+        #pragma omp for schedule(static)
         for (j = jj; j < jj+b; j++) {
           sum = A[i][j];
           for (k = kk; k < kk+b; k++) {
-              sum += B[i][k] * B[k][j];
+              sum += B[i][k] * C[k][j];
           }
           A[i][j] = sum;
         }
@@ -1232,15 +1232,15 @@ void block_omp_d (int n, int t, int b, double **A, double **B, double **C) {
   //--
   omp_set_num_threads(t);
 
-  int i, j, k, en, jj, kk;
+  int i, j, k, jj, kk;
   double sum = 0.0;
-  en = b * (n/b);
+  int en = b * (n / b);
 
   time_begin = omp_get_wtime();
 
   #pragma omp parallel	      \
   shared  (A, B, C, n, en)		\
-  private (i, j, k, jj, kk)
+  private (i, j, k, jj, kk, sum)
   for (kk = 0; kk < en; kk += b) {
     for (jj = 0; jj < en; jj += b) {
       #pragma omp for schedule(dynamic)
@@ -1248,7 +1248,7 @@ void block_omp_d (int n, int t, int b, double **A, double **B, double **C) {
         for (j = jj; j < jj+b; j++) {
           sum = A[i][j];
           for (k = kk; k < kk+b; k++) {
-              sum += B[i][k] * B[k][j];
+              sum += B[i][k] * C[k][j];
           }
           A[i][j] = sum;
         }
@@ -1298,15 +1298,15 @@ void block_omp_g (int n, int t, int b, double **A, double **B, double **C) {
   //--
   omp_set_num_threads(t);
 
-  int i, j, k, en, jj, kk;
+  int i, j, k, jj, kk;
   double sum = 0.0;
-  en = b * (n/b);
+  int en = b * (n / b);
 
   time_begin = omp_get_wtime();
 
   #pragma omp parallel	      \
   shared  (A, B, C, n, en)		\
-  private (i, j, k, jj, kk)
+  private (i, j, k, jj, kk, sum)
   for (kk = 0; kk < en; kk += b) {
     for (jj = 0; jj < en; jj += b) {
       #pragma omp for schedule(guided)
@@ -1314,7 +1314,7 @@ void block_omp_g (int n, int t, int b, double **A, double **B, double **C) {
         for (j = jj; j < jj+b; j++) {
           sum = A[i][j];
           for (k = kk; k < kk+b; k++) {
-              sum += B[i][k] * B[k][j];
+              sum += B[i][k] * C[k][j];
           }
           A[i][j] = sum;
         }
