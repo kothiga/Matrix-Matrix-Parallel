@@ -19,7 +19,7 @@
 #include <omp.h>
 
 /* Enable / Disable debugging */
-#define debug 1
+#define debug 0
 
 
 /* For running all Matrix Matrix Multiplication Tests */
@@ -30,7 +30,7 @@ void RunAllThreadTests (int n, int t);
 /* Helper Function Prototypes */
 double randomize (int *seed);
 void   clear     (int n, double **X);
-void   stats     (char* desc, int n, int threads, double* T, double* R);
+void   stats     (char* desc, int n, int threads, double *T, double *R);
 void   help      ();
 int    validate  (int n, double **S, double **X);
 
@@ -86,8 +86,11 @@ double avgRate_Naive_Guided;
 double avgRate_Optim_Guided;
 double avgRate_Block_Guided;
 
+#define DYNAMC_CHUNK 128
+
 #if debug
 int ErrorCount = 0;
+double **s;
 #endif
 
 
@@ -155,6 +158,47 @@ int main (int argc, char *argv[]) {
   printf("  Floating point OPS roughly = %llu\n", ops);
 
 
+  #if debug
+  int i, j;
+
+  double** b = (double **) calloc (n, sizeof (double));
+  double** c = (double **) calloc (n, sizeof (double));
+
+  for (i = 0; i < n; i++) b[i] = (double *) calloc (n, sizeof (double));
+  for (i = 0; i < n; i++) c[i] = (double *) calloc (n, sizeof (double));
+
+
+  //--
+  //-- Assign randomly generated values to the input matrices B and C.
+  //--
+  int seed = 123456789;
+
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      b[i][j] = randomize (&seed);
+    }
+  }
+
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      c[i][j] = randomize (&seed);
+    }
+  }
+  //-- allocate the space for s
+  s = (double **) calloc (n, sizeof (double));
+  for (i = 0; i < n; i++) s[i] = (double *) calloc (n, sizeof (double));
+
+  //-- Generate a "Good" Solution
+  optim_serial (n, s, b, c);
+  printf("\n\nFinished Generating Solution Mat.\n\n");
+
+  for (int i = 0; i < n; i++) {
+    free(b[i]); free(c[i]);
+  }
+  free(b); free(c);
+  #endif
+
+
   //--
   //-- @@@ SH Note 1a:
   //--  You must read in the dimension of the matrix and the number of threads
@@ -194,7 +238,6 @@ int main (int argc, char *argv[]) {
     printf("  Naive Time %f\n  Naive Rate %f\n\n", avgTime_Naive_Serial, avgRate_Naive_Serial);
     printf("  Optim Time %f\n  Optim Rate %f\n\n", avgTime_Optim_Serial, avgRate_Optim_Serial);
     printf("  Block Time %f\n  Block Rate %f\n\n", avgTime_Block_Serial, avgRate_Block_Serial);
-
   }
 
 
@@ -262,11 +305,11 @@ int main (int argc, char *argv[]) {
     printf("  Naive-Dynamic Time %f\n  Naive-Dynamic Rate %f\n\n",   avgTime_Naive_Dynamic, avgRate_Naive_Dynamic);
     printf("  Naive-Guided  Time %f\n  Naive-Guided  Rate %f\n\n\n", avgTime_Naive_Guided,  avgRate_Naive_Guided);
 
-    printf("  Optim-Static  Time %f\n  Optim-Static Rate %f\n\n",    avgTime_Optim_Static,  avgRate_Optim_Static);
+    printf("  Optim-Static  Time %f\n  Optim-Static  Rate %f\n\n",   avgTime_Optim_Static,  avgRate_Optim_Static);
     printf("  Optim-Dynamic Time %f\n  Optim-Dynamic Rate %f\n\n",   avgTime_Optim_Dynamic, avgRate_Optim_Dynamic);
     printf("  Optim-Guided  Time %f\n  Optim-Guided  Rate %f\n\n\n", avgTime_Optim_Guided,  avgRate_Optim_Guided);
 
-    printf("  Block-Static  Time %f\n  Block-Static Rate %f\n\n",    avgTime_Block_Static,  avgRate_Block_Static);
+    printf("  Block-Static  Time %f\n  Block-Static  Rate %f\n\n",   avgTime_Block_Static,  avgRate_Block_Static);
     printf("  Block-Dynamic Time %f\n  Block-Dynamic Rate %f\n\n",   avgTime_Block_Dynamic, avgRate_Block_Dynamic);
     printf("  Block-Guided  Time %f\n  Block-Guided  Rate %f\n\n\n", avgTime_Block_Guided,  avgRate_Block_Guided);
 
@@ -282,6 +325,12 @@ int main (int argc, char *argv[]) {
 
   #if debug
   printf("  Execution Finished with %d Error(s) Found.\n", ErrorCount);
+
+  //-- Deallocate the used memory
+  for (i = 0; i < n; i++) {
+    free(s[i]);
+  }
+  free(s);
   #endif
 
   return 0;
@@ -319,30 +368,16 @@ void RunAllSerialTests (int n) {
   seed = 123456789;
 
   for (i = 0; i < n; i++) {
-  for (j = 0; j < n; j++) {
-  b[i][j] = randomize (&seed);
-}
-}
+    for (j = 0; j < n; j++) {
+      b[i][j] = randomize (&seed);
+    }
+  }
 
   for (i = 0; i < n; i++) {
-  for (j = 0; j < n; j++) {
-  c[i][j] = randomize (&seed);
-}
-}
-
-
-  #if debug
-  //-- allocate the space for s
-  double **s;
-  s = (double **) calloc (n, sizeof (double));
-  for (i = 0; i < n; i++) s[i] = (double *) calloc (n, sizeof (double));
-  //-- Generate a "Good" Solution
-  optim_serial (n, s, b, c);
-  printf("\n\nFinished Generating Solution Mat.\n");
-  #endif
-
-
-
+    for (j = 0; j < n; j++) {
+      c[i][j] = randomize (&seed);
+    }
+  }
 
   //######################################################
   //--
@@ -408,6 +443,7 @@ void RunAllSerialTests (int n) {
   //--
   //-- Run a series of Serial Blocking Tests
   //--
+
   block_serial(n, 16, a, b, c);
 
   #if debug
@@ -430,13 +466,11 @@ void RunAllSerialTests (int n) {
   //-- Clear out Mat A
   clear(n, a);
 
-
   //-- Deallocate the used memory
+  for (i = 0; i < n; i++) {
+    free(a[i]); free(b[i]); free(c[i]);
+  }
   free(a); free(b); free(c);
-
-  #if debug
-  free(s);
-  #endif
 
   return;
 }
@@ -479,23 +513,10 @@ void RunAllThreadTests (int n, int t) {
   }
 
   for (i = 0; i < n; i++) {
-  for (j = 0; j < n; j++) {
-  c[i][j] = randomize (&seed);
-}
-}
-
-
-  #if debug
-  //-- allocate space
-  double **s;
-  s = (double **) calloc (n, sizeof (double));
-  for (i = 0; i < n; i++) s[i] = (double *) calloc (n, sizeof (double));
-  //-- Generate a "Good" Solution
-  optim_serial (n, s, b, c);
-  printf("\n\nFinished Generating Solution Mat.\n");
-  #endif
-
-
+    for (j = 0; j < n; j++) {
+      c[i][j] = randomize (&seed);
+    }
+  }
 
 
 
@@ -766,14 +787,11 @@ void RunAllThreadTests (int n, int t) {
   clear(n, a);
 
 
-
-
   //-- Deallocate the used memory
+  for (i = 0; i < n; i++) {
+    free(a[i]); free(b[i]); free(c[i]);
+  }
   free(a); free(b); free(c);
-
-  #if debug
-  free(s);
-  #endif
 
   return;
 }
@@ -826,7 +844,7 @@ int validate (int n, double **S, double **X) {
 //--
 //-- Stats : give the user the stats of this implementation
 //--
-void stats (char* desc, int n, int thread, double* T, double* R) {
+void stats (char* desc, int n, int thread, double *T, double *R) {
 
   unsigned long long ops;
   double time, rate;
@@ -856,13 +874,16 @@ void stats (char* desc, int n, int thread, double* T, double* R) {
 //-- Help : simple function for how to use this program
 //--
 void help () {
-  printf("Usage: ./MatMultOpenMP [-h] -n <num> -t <num>\n");
+  printf("\n");
+  printf("Usage: ./MatMultOpenMP [-h] -n <num> -t <num> [-s] [-p]\n");
   printf("Options:\n");
   printf("  -h\t\tPrint this help message.\n");
   printf("  -n <num>\tSize of N.\n");
   printf("  -t <num>\tNumber of Threads.\n");
+  printf("  -s\t\tRun all Serial Tests\n");
+  printf("  -p\t\tRun all OpenMP Tests\n");
   printf("Examples:\n");
-  printf("linux> ./MatMultOpenMP -n 1024 -t 8\n");
+  printf("linux> ./MatMultOpenMP -n 1024 -t 8 -p\n");
 }
 
 
@@ -946,7 +967,7 @@ void naive_omp_d (int n, int t, double **A, double **B, double **C) {
   shared (A, B, C, n)	\
   private (i, j, k)
 
-  #pragma omp for schedule(dynamic)
+  #pragma omp for schedule(dynamic,DYNAMC_CHUNK)
   for (i = 0; i < n; i++) {
     for (j = 0; j < n; j++) {
       for (k = 0; k < n; k++) {
@@ -1048,7 +1069,6 @@ void optim_omp_s (int n, int t, double **A, double **B, double **C) {
     }
   }
 
-
   time_stop = omp_get_wtime();
 }
 
@@ -1075,7 +1095,7 @@ void optim_omp_d (int n, int t, double **A, double **B, double **C) {
   private (i, j, k, r)
 
   for (k = 0; k < n; k++) {
-    # pragma omp for schedule(dynamic)
+    # pragma omp for schedule(dynamic,DYNAMC_CHUNK)
     for (i = 0; i < n; i++) {
       r = B[i][k];
       for (j = 0; j < n; j++) {
@@ -1142,7 +1162,7 @@ void block_serial (int n, int b, double **A, double **B, double **C) {
         for (j = jj; j < jj+b; j++) {
           sum = A[i][j];
           for (k = kk; k < kk+b; k++) {
-              sum += B[i][k] * C[k][j];
+            sum += B[i][k] * C[k][j];
           }
           A[i][j] = sum;
         }
@@ -1182,7 +1202,7 @@ void block_omp_s (int n, int t, int b, double **A, double **B, double **C) {
         for (j = jj; j < jj+b; j++) {
           sum = A[i][j];
           for (k = kk; k < kk+b; k++) {
-              sum += B[i][k] * C[k][j];
+            sum += B[i][k] * C[k][j];
           }
           A[i][j] = sum;
         }
@@ -1191,32 +1211,6 @@ void block_omp_s (int n, int t, int b, double **A, double **B, double **C) {
   }
 
   time_stop = omp_get_wtime();
-
-  /*
-  int i, j, k, ii, jj, kk;
-
-  time_begin = omp_get_wtime();
-
-  # pragma omp parallel	  	\
-  shared (A, B, C, n)		\
-  private (i, j, k, ii, jj, kk)
-  for (i = 0; i < n; i += b) {
-    for (j = 0; j < n; j += b) {
-      for (k = 0; k < n; k += b) {
-        #pragma omp for schedule(static)
-        for (ii = i; ii < i+b; ii++) {
-          for (jj = j; jj < j+b; jj++) {
-            for (kk = k; kk < k+b; kk++) {
-              A[ii][jj] += B[ii][kk] * C[kk][jj];
-            }
-          }
-        }
-      }
-    }
-  }
-
-  time_stop = omp_get_wtime();
-  */
 }
 
 
@@ -1243,12 +1237,12 @@ void block_omp_d (int n, int t, int b, double **A, double **B, double **C) {
   private (i, j, k, jj, kk, sum)
   for (kk = 0; kk < en; kk += b) {
     for (jj = 0; jj < en; jj += b) {
-      #pragma omp for schedule(dynamic)
+      #pragma omp for schedule(dynamic,DYNAMC_CHUNK)
       for (i = 0; i < n; i++) {
         for (j = jj; j < jj+b; j++) {
           sum = A[i][j];
           for (k = kk; k < kk+b; k++) {
-              sum += B[i][k] * C[k][j];
+            sum += B[i][k] * C[k][j];
           }
           A[i][j] = sum;
         }
@@ -1257,32 +1251,6 @@ void block_omp_d (int n, int t, int b, double **A, double **B, double **C) {
   }
 
   time_stop = omp_get_wtime();
-
-  /*
-  int i, j, k, ii, jj, kk;
-
-  time_begin = omp_get_wtime();
-
-  # pragma omp parallel	  	\
-  shared (A, B, C, n)		\
-  private (i, j, k, ii, jj, kk)
-  for (i = 0; i < n; i += b) {
-    for (j = 0; j < n; j += b) {
-      for (k = 0; k < n; k += b) {
-        #pragma omp for schedule(dynamic)
-        for (ii = i; ii < i+b; ii++) {
-          for (jj = j; jj < j+b; jj++) {
-            for (kk = k; kk < k+b; kk++) {
-              A[ii][jj] += B[ii][kk] * C[kk][jj];
-            }
-          }
-        }
-      }
-    }
-  }
-
-  time_stop = omp_get_wtime();
-  */
 }
 
 
@@ -1314,7 +1282,7 @@ void block_omp_g (int n, int t, int b, double **A, double **B, double **C) {
         for (j = jj; j < jj+b; j++) {
           sum = A[i][j];
           for (k = kk; k < kk+b; k++) {
-              sum += B[i][k] * C[k][j];
+            sum += B[i][k] * C[k][j];
           }
           A[i][j] = sum;
         }
@@ -1323,30 +1291,4 @@ void block_omp_g (int n, int t, int b, double **A, double **B, double **C) {
   }
 
   time_stop = omp_get_wtime();
-
-  /*
-  int i, j, k, ii, jj, kk;
-
-  time_begin = omp_get_wtime();
-
-  # pragma omp parallel	  	\
-  shared (A, B, C, n)		\
-  private (i, j, k, ii, jj, kk)
-  for (i = 0; i < n; i += b) {
-    for (j = 0; j < n; j += b) {
-      for (k = 0; k < n; k += b) {
-        #pragma omp for schedule(guided)
-        for (ii = i; ii < i+b; ii++) {
-          for (jj = j; jj < j+b; jj++) {
-            for (kk = k; kk < k+b; kk++) {
-              A[ii][jj] += B[ii][kk] * C[kk][jj];
-            }
-          }
-        }
-      }
-    }
-  }
-
-  time_stop = omp_get_wtime();
-  */
 }

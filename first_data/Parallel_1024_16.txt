@@ -1,0 +1,860 @@
+n is 1024
+t is 16
+
+Dense NxN
+  C/OpenMP version.
+
+  Matrix multiplication tests.
+  Floating point OPS roughly = 2147483648
+
+  Number of processors available = 8
+  Number of threads              = 16
+
+
+
+
+   Beginning Trial 1, of Matrix Size 1024, with 16 threads
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Finished Generating Solution Mat.
+
+############################################
+  Test    = Naive OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.964429
+  Rate = MegaOPS/dT          = 1093.184482
+
+############################################
+  Test    = Naive OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.953187
+  Rate = MegaOPS/dT          = 1099.476659
+
+############################################
+  Test    = Naive OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.015736
+  Rate = MegaOPS/dT          = 1065.359801
+
+############################################
+  Test    = Loop Optimized OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.070447
+  Rate = MegaOPS/dT          = 2006.155564
+
+############################################
+  Test    = Loop Optimized OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.972572
+  Rate = MegaOPS/dT          = 2208.045119
+
+############################################
+  Test    = Loop Optimized OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.978229
+  Rate = MegaOPS/dT          = 2195.277086
+
+############################################
+  Test    = Blocking OpenMP Static - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 6.071257
+  Rate = MegaOPS/dT          = 353.713167
+
+############################################
+  Test    = Blocking OpenMP Dynamic - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.274566
+  Rate = MegaOPS/dT          = 655.807107
+
+############################################
+  Test    = Blocking OpenMP Guided - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.328015
+  Rate = MegaOPS/dT          = 645.274594
+
+
+
+
+   Beginning Trial 2, of Matrix Size 1024, with 16 threads
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Finished Generating Solution Mat.
+
+############################################
+  Test    = Naive OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.034617
+  Rate = MegaOPS/dT          = 1055.473373
+
+############################################
+  Test    = Naive OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.980051
+  Rate = MegaOPS/dT          = 1084.559849
+
+############################################
+  Test    = Naive OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.950844
+  Rate = MegaOPS/dT          = 1100.797201
+
+############################################
+  Test    = Loop Optimized OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.074274
+  Rate = MegaOPS/dT          = 1999.009651
+
+############################################
+  Test    = Loop Optimized OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.952622
+  Rate = MegaOPS/dT          = 2254.286952
+
+############################################
+  Test    = Loop Optimized OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.964354
+  Rate = MegaOPS/dT          = 2226.861463
+
+############################################
+  Test    = Blocking OpenMP Static - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 5.797361
+  Rate = MegaOPS/dT          = 370.424362
+
+############################################
+  Test    = Blocking OpenMP Dynamic - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.252534
+  Rate = MegaOPS/dT          = 660.249307
+
+############################################
+  Test    = Blocking OpenMP Guided - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.262237
+  Rate = MegaOPS/dT          = 658.285626
+
+
+
+
+   Beginning Trial 3, of Matrix Size 1024, with 16 threads
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Finished Generating Solution Mat.
+
+############################################
+  Test    = Naive OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.958080
+  Rate = MegaOPS/dT          = 1096.729009
+
+############################################
+  Test    = Naive OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.918168
+  Rate = MegaOPS/dT          = 1119.549322
+
+############################################
+  Test    = Naive OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.950909
+  Rate = MegaOPS/dT          = 1100.760463
+
+############################################
+  Test    = Loop Optimized OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.072853
+  Rate = MegaOPS/dT          = 2001.657747
+
+############################################
+  Test    = Loop Optimized OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.952274
+  Rate = MegaOPS/dT          = 2255.111027
+
+############################################
+  Test    = Loop Optimized OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.961057
+  Rate = MegaOPS/dT          = 2234.501708
+
+############################################
+  Test    = Blocking OpenMP Static - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 5.998198
+  Rate = MegaOPS/dT          = 358.021484
+
+############################################
+  Test    = Blocking OpenMP Dynamic - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.238009
+  Rate = MegaOPS/dT          = 663.211157
+
+############################################
+  Test    = Blocking OpenMP Guided - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.264772
+  Rate = MegaOPS/dT          = 657.774542
+
+
+
+
+   Beginning Trial 4, of Matrix Size 1024, with 16 threads
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Finished Generating Solution Mat.
+
+############################################
+  Test    = Naive OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.903239
+  Rate = MegaOPS/dT          = 1128.330932
+
+############################################
+  Test    = Naive OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.904213
+  Rate = MegaOPS/dT          = 1127.753843
+
+############################################
+  Test    = Naive OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.947290
+  Rate = MegaOPS/dT          = 1102.806491
+
+############################################
+  Test    = Loop Optimized OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.067356
+  Rate = MegaOPS/dT          = 2011.965728
+
+############################################
+  Test    = Loop Optimized OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.962776
+  Rate = MegaOPS/dT          = 2230.512667
+
+############################################
+  Test    = Loop Optimized OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.988185
+  Rate = MegaOPS/dT          = 2173.158433
+
+############################################
+  Test    = Blocking OpenMP Static - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 6.455831
+  Rate = MegaOPS/dT          = 332.642492
+
+############################################
+  Test    = Blocking OpenMP Dynamic - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.687923
+  Rate = MegaOPS/dT          = 582.301636
+
+############################################
+  Test    = Blocking OpenMP Guided - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 5.578948
+  Rate = MegaOPS/dT          = 384.926250
+
+
+
+
+   Beginning Trial 5, of Matrix Size 1024, with 16 threads
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Finished Generating Solution Mat.
+
+############################################
+  Test    = Naive OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.202517
+  Rate = MegaOPS/dT          = 975.013607
+
+############################################
+  Test    = Naive OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.132322
+  Rate = MegaOPS/dT          = 1007.110573
+
+############################################
+  Test    = Naive OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.132642
+  Rate = MegaOPS/dT          = 1006.959273
+
+############################################
+  Test    = Loop Optimized OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.204871
+  Rate = MegaOPS/dT          = 1782.335226
+
+############################################
+  Test    = Loop Optimized OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.011765
+  Rate = MegaOPS/dT          = 2122.513172
+
+############################################
+  Test    = Loop Optimized OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.993473
+  Rate = MegaOPS/dT          = 2161.592646
+
+############################################
+  Test    = Blocking OpenMP Static - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 7.958049
+  Rate = MegaOPS/dT          = 269.850511
+
+############################################
+  Test    = Blocking OpenMP Dynamic - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.599240
+  Rate = MegaOPS/dT          = 596.649255
+
+############################################
+  Test    = Blocking OpenMP Guided - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 5.107890
+  Rate = MegaOPS/dT          = 420.424765
+
+
+
+
+   Beginning Trial 6, of Matrix Size 1024, with 16 threads
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Finished Generating Solution Mat.
+
+############################################
+  Test    = Naive OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.340858
+  Rate = MegaOPS/dT          = 917.391583
+
+############################################
+  Test    = Naive OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.209321
+  Rate = MegaOPS/dT          = 972.010566
+
+############################################
+  Test    = Naive OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.278750
+  Rate = MegaOPS/dT          = 942.395259
+
+############################################
+  Test    = Loop Optimized OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.311198
+  Rate = MegaOPS/dT          = 1637.802317
+
+############################################
+  Test    = Loop Optimized OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.134060
+  Rate = MegaOPS/dT          = 1893.623756
+
+############################################
+  Test    = Loop Optimized OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.113389
+  Rate = MegaOPS/dT          = 1928.781491
+
+############################################
+  Test    = Blocking OpenMP Static - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 9.550364
+  Rate = MegaOPS/dT          = 224.858820
+
+############################################
+  Test    = Blocking OpenMP Dynamic - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 5.048200
+  Rate = MegaOPS/dT          = 425.395871
+
+############################################
+  Test    = Blocking OpenMP Guided - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 4.603463
+  Rate = MegaOPS/dT          = 466.493077
+
+
+
+
+   Beginning Trial 7, of Matrix Size 1024, with 16 threads
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Finished Generating Solution Mat.
+
+############################################
+  Test    = Naive OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.275487
+  Rate = MegaOPS/dT          = 943.746851
+
+############################################
+  Test    = Naive OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.232873
+  Rate = MegaOPS/dT          = 961.757964
+
+############################################
+  Test    = Naive OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.283100
+  Rate = MegaOPS/dT          = 940.599907
+
+############################################
+  Test    = Loop Optimized OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.495503
+  Rate = MegaOPS/dT          = 1435.961184
+
+############################################
+  Test    = Loop Optimized OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.203805
+  Rate = MegaOPS/dT          = 1783.912960
+
+############################################
+  Test    = Loop Optimized OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.098802
+  Rate = MegaOPS/dT          = 1954.385970
+
+############################################
+  Test    = Blocking OpenMP Static - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 7.551114
+  Rate = MegaOPS/dT          = 284.392973
+
+############################################
+  Test    = Blocking OpenMP Dynamic - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.673201
+  Rate = MegaOPS/dT          = 584.635538
+
+############################################
+  Test    = Blocking OpenMP Guided - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.599539
+  Rate = MegaOPS/dT          = 596.599708
+
+
+
+
+   Beginning Trial 8, of Matrix Size 1024, with 16 threads
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Finished Generating Solution Mat.
+
+############################################
+  Test    = Naive OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.031892
+  Rate = MegaOPS/dT          = 1056.888622
+
+############################################
+  Test    = Naive OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.987483
+  Rate = MegaOPS/dT          = 1080.504106
+
+############################################
+  Test    = Naive OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.994705
+  Rate = MegaOPS/dT          = 1076.591864
+
+############################################
+  Test    = Loop Optimized OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.105822
+  Rate = MegaOPS/dT          = 1941.979541
+
+############################################
+  Test    = Loop Optimized OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.969213
+  Rate = MegaOPS/dT          = 2215.697921
+
+############################################
+  Test    = Loop Optimized OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.989917
+  Rate = MegaOPS/dT          = 2169.357595
+
+############################################
+  Test    = Blocking OpenMP Static - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 6.707158
+  Rate = MegaOPS/dT          = 320.177894
+
+############################################
+  Test    = Blocking OpenMP Dynamic - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.619300
+  Rate = MegaOPS/dT          = 593.342326
+
+############################################
+  Test    = Blocking OpenMP Guided - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.625494
+  Rate = MegaOPS/dT          = 592.328503
+
+
+
+
+   Beginning Trial 9, of Matrix Size 1024, with 16 threads
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Finished Generating Solution Mat.
+
+############################################
+  Test    = Naive OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.939179
+  Rate = MegaOPS/dT          = 1107.418745
+
+############################################
+  Test    = Naive OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.153766
+  Rate = MegaOPS/dT          = 997.083167
+
+############################################
+  Test    = Naive OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.240243
+  Rate = MegaOPS/dT          = 958.593940
+
+############################################
+  Test    = Loop Optimized OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.433405
+  Rate = MegaOPS/dT          = 1498.169771
+
+############################################
+  Test    = Loop Optimized OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.192102
+  Rate = MegaOPS/dT          = 1801.426789
+
+############################################
+  Test    = Loop Optimized OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.322930
+  Rate = MegaOPS/dT          = 1623.278001
+
+############################################
+  Test    = Blocking OpenMP Static - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 8.310557
+  Rate = MegaOPS/dT          = 258.404285
+
+############################################
+  Test    = Blocking OpenMP Dynamic - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 4.453393
+  Rate = MegaOPS/dT          = 482.212888
+
+############################################
+  Test    = Blocking OpenMP Guided - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.525435
+  Rate = MegaOPS/dT          = 609.140042
+
+
+
+
+   Beginning Trial 10, of Matrix Size 1024, with 16 threads
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+Finished Generating Solution Mat.
+
+############################################
+  Test    = Naive OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 2.006717
+  Rate = MegaOPS/dT          = 1070.147865
+
+############################################
+  Test    = Naive OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.947921
+  Rate = MegaOPS/dT          = 1102.448965
+
+############################################
+  Test    = Naive OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.958396
+  Rate = MegaOPS/dT          = 1096.552142
+
+############################################
+  Test    = Loop Optimized OpenMP Static.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 1.083298
+  Rate = MegaOPS/dT          = 1982.357855
+
+############################################
+  Test    = Loop Optimized OpenMP Dynamic.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.956787
+  Rate = MegaOPS/dT          = 2244.473049
+
+############################################
+  Test    = Loop Optimized OpenMP Guided.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.971225
+  Rate = MegaOPS/dT          = 2211.109347
+
+############################################
+  Test    = Blocking OpenMP Static - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 6.119447
+  Rate = MegaOPS/dT          = 350.927704
+
+############################################
+  Test    = Blocking OpenMP Dynamic - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.464098
+  Rate = MegaOPS/dT          = 619.925832
+
+############################################
+  Test    = Blocking OpenMP Guided - 16.
+  N       = 1024
+  Threads = 16
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 3.407315
+  Rate = MegaOPS/dT          = 630.256865
+
+
+
+   Total Averages for All 10 OpenMP Trials   
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  Naive-Static  Time 2.065702
+  Naive-Static  Rate 1044.432507
+
+  Naive-Dynamic Time 2.041931
+  Naive-Dynamic Rate 1055.225501
+
+  Naive-Guided  Time 2.075262
+  Naive-Guided  Rate 1039.141634
+
+
+  Optim-Static  Time 1.191903
+  Optim-Static Rate 1829.739458
+
+  Optim-Dynamic Time 1.030798
+  Optim-Dynamic Rate 2100.960341
+
+  Optim-Guided  Time 1.038156
+  Optim-Guided  Rate 2087.830374
+
+
+  Block-Static  Time 7.051934
+  Block-Static Rate 312.341369
+
+  Block-Dynamic Time 3.731046
+  Block-Dynamic Rate 586.373092
+
+  Block-Guided  Time 3.930311
+  Block-Guided  Rate 566.150397
+
+
+
+Dense NxN:
+  Normal end of execution.
+  Execution Finished with 0 Error(s) Found.

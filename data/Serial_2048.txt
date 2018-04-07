@@ -1,0 +1,326 @@
+
+Dense NxN
+  C/OpenMP version.
+
+  Matrix multiplication tests.
+  Floating point OPS roughly = 17179869184
+
+  Number of processors available = 8
+  Number of threads              = 8
+
+
+
+
+   Beginning Trial 1, of Matrix Size 2048
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Naive Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 102.242054
+  Rate = MegaOPS/dT          = 168.031339
+
+############################################
+  Test    = Loop Optimized Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.462254
+  Rate = MegaOPS/dT          = 732.234386
+
+############################################
+  Test    = Serial Blocking - 16.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 24.605307
+  Rate = MegaOPS/dT          = 698.218039
+
+
+
+
+   Beginning Trial 2, of Matrix Size 2048
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Naive Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 102.346368
+  Rate = MegaOPS/dT          = 167.860076
+
+############################################
+  Test    = Loop Optimized Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.323335
+  Rate = MegaOPS/dT          = 736.595748
+
+############################################
+  Test    = Serial Blocking - 16.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 24.091413
+  Rate = MegaOPS/dT          = 713.111735
+
+
+
+
+   Beginning Trial 3, of Matrix Size 2048
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Naive Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 96.746622
+  Rate = MegaOPS/dT          = 177.575907
+
+############################################
+  Test    = Loop Optimized Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.852181
+  Rate = MegaOPS/dT          = 720.264090
+
+############################################
+  Test    = Serial Blocking - 16.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 25.017605
+  Rate = MegaOPS/dT          = 686.711182
+
+
+
+
+   Beginning Trial 4, of Matrix Size 2048
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Naive Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 100.993953
+  Rate = MegaOPS/dT          = 170.107900
+
+############################################
+  Test    = Loop Optimized Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.721045
+  Rate = MegaOPS/dT          = 724.245877
+
+############################################
+  Test    = Serial Blocking - 16.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.946173
+  Rate = MegaOPS/dT          = 717.436944
+
+
+
+
+   Beginning Trial 5, of Matrix Size 2048
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Naive Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 101.917637
+  Rate = MegaOPS/dT          = 168.566204
+
+############################################
+  Test    = Loop Optimized Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.937767
+  Rate = MegaOPS/dT          = 717.688877
+
+############################################
+  Test    = Serial Blocking - 16.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 24.860251
+  Rate = MegaOPS/dT          = 691.057763
+
+
+
+
+   Beginning Trial 6, of Matrix Size 2048
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Naive Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 101.494046
+  Rate = MegaOPS/dT          = 169.269724
+
+############################################
+  Test    = Loop Optimized Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.182428
+  Rate = MegaOPS/dT          = 741.072890
+
+############################################
+  Test    = Serial Blocking - 16.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 24.765001
+  Rate = MegaOPS/dT          = 693.715657
+
+
+
+
+   Beginning Trial 7, of Matrix Size 2048
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Naive Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 101.500472
+  Rate = MegaOPS/dT          = 169.259008
+
+############################################
+  Test    = Loop Optimized Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.087726
+  Rate = MegaOPS/dT          = 744.112662
+
+############################################
+  Test    = Serial Blocking - 16.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 24.714886
+  Rate = MegaOPS/dT          = 695.122328
+
+
+
+
+   Beginning Trial 8, of Matrix Size 2048
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Naive Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 101.461016
+  Rate = MegaOPS/dT          = 169.324829
+
+############################################
+  Test    = Loop Optimized Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.236052
+  Rate = MegaOPS/dT          = 739.362652
+
+############################################
+  Test    = Serial Blocking - 16.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 24.693818
+  Rate = MegaOPS/dT          = 695.715392
+
+
+
+
+   Beginning Trial 9, of Matrix Size 2048
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Naive Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 92.250898
+  Rate = MegaOPS/dT          = 186.229832
+
+############################################
+  Test    = Loop Optimized Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 22.915176
+  Rate = MegaOPS/dT          = 749.715789
+
+############################################
+  Test    = Serial Blocking - 16.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.188564
+  Rate = MegaOPS/dT          = 740.876801
+
+
+
+
+   Beginning Trial 10, of Matrix Size 2048
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Naive Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 101.861992
+  Rate = MegaOPS/dT          = 168.658288
+
+############################################
+  Test    = Loop Optimized Serial.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 23.502215
+  Rate = MegaOPS/dT          = 730.989368
+
+############################################
+  Test    = Serial Blocking - 16.
+  N       = 2048
+  Threads = 0
+  Floating point OPS roughly = 17179869184
+  Elapsed time dT            = 24.724061
+  Rate = MegaOPS/dT          = 694.864387
+
+
+
+   Total Averages for All 10 Serial Trials   
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  Naive Time 100.281506
+  Naive Rate 171.488311
+
+  Optim Time 23.422018
+  Optim Rate 733.628234
+
+  Block Time 24.460708
+  Block Rate 702.683023
+
+
+Dense NxN:
+  Normal end of execution.
