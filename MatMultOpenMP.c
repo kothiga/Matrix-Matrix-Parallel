@@ -210,13 +210,9 @@ int main (int argc, char *argv[]) {
 
   if (serialFlag) {
 
-    avgTime_Naive_Serial = 0.0;
-    avgTime_Optim_Serial = 0.0;
-    avgTime_Block_Serial = 0.0;
-
-    avgRate_Naive_Serial = 0.0;
-    avgRate_Optim_Serial = 0.0;
-    avgRate_Block_Serial = 0.0;
+    avgTime_Naive_Serial = 0.0;  avgRate_Naive_Serial = 0.0;
+    avgTime_Optim_Serial = 0.0;  avgRate_Optim_Serial = 0.0;
+    avgTime_Block_Serial = 0.0;  avgRate_Block_Serial = 0.0;
 
     for (int i = 1; i <= 10; i++) {
       printf("\n\n\n\n   Beginning Trial %d, of Matrix Size %d\n", i, n);
@@ -225,13 +221,10 @@ int main (int argc, char *argv[]) {
       RunAllSerialTests(n);
     }
 
-    avgTime_Naive_Serial /= 10.0;
-    avgTime_Optim_Serial /= 10.0;
-    avgTime_Block_Serial /= 10.0;
+    avgTime_Naive_Serial /= 10.0;  avgRate_Naive_Serial /= 10.0;
+    avgTime_Optim_Serial /= 10.0;  avgRate_Optim_Serial /= 10.0;
+    avgTime_Block_Serial /= 10.0;  avgRate_Block_Serial /= 10.0;
 
-    avgRate_Naive_Serial /= 10.0;
-    avgRate_Optim_Serial /= 10.0;
-    avgRate_Block_Serial /= 10.0;
 
     printf("\n\n\n   Total Averages for All 10 Serial Trials   \n");
     printf(      "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
@@ -244,29 +237,18 @@ int main (int argc, char *argv[]) {
 
   if (parallelFlag) {
 
-    avgTime_Naive_Static = 0.0;
-    avgTime_Optim_Static = 0.0;
-    avgTime_Block_Static = 0.0;
+    avgTime_Naive_Static = 0.0;  avgRate_Naive_Static = 0.0;
+    avgTime_Optim_Static = 0.0;  avgRate_Optim_Static = 0.0;
+    avgTime_Block_Static = 0.0;  avgRate_Block_Static = 0.0;
 
-    avgTime_Naive_Dynamic = 0.0;
-    avgTime_Optim_Dynamic = 0.0;
-    avgTime_Block_Dynamic = 0.0;
+    avgTime_Naive_Dynamic = 0.0; avgRate_Naive_Dynamic = 0.0;
+    avgTime_Optim_Dynamic = 0.0; avgRate_Optim_Dynamic = 0.0;
+    avgTime_Block_Dynamic = 0.0; avgRate_Block_Dynamic = 0.0;
 
-    avgTime_Naive_Guided = 0.0;
-    avgTime_Optim_Guided = 0.0;
-    avgTime_Block_Guided = 0.0;
+    avgTime_Naive_Guided = 0.0;  avgRate_Naive_Guided = 0.0;
+    avgTime_Optim_Guided = 0.0;  avgRate_Optim_Guided = 0.0;
+    avgTime_Block_Guided = 0.0;  avgRate_Block_Guided = 0.0;
 
-    avgRate_Naive_Static = 0.0;
-    avgRate_Optim_Static = 0.0;
-    avgRate_Block_Static = 0.0;
-
-    avgRate_Naive_Dynamic = 0.0;
-    avgRate_Optim_Dynamic = 0.0;
-    avgRate_Block_Dynamic = 0.0;
-
-    avgRate_Naive_Guided = 0.0;
-    avgRate_Optim_Guided = 0.0;
-    avgRate_Block_Guided = 0.0;
 
     for (int i = 1; i <= 10; i++) {
       printf("\n\n\n\n   Beginning Trial %d, of Matrix Size %d, with %d threads\n", i, n, t);
@@ -275,29 +257,18 @@ int main (int argc, char *argv[]) {
       RunAllThreadTests(n, t);
     }
 
-    avgTime_Naive_Static /= 10.0;
-    avgTime_Optim_Static /= 10.0;
-    avgTime_Block_Static /= 10.0;
+    avgTime_Naive_Static /= 10.0;  avgRate_Naive_Static /= 10.0;
+    avgTime_Optim_Static /= 10.0;  avgRate_Optim_Static /= 10.0;
+    avgTime_Block_Static /= 10.0;  avgRate_Block_Static /= 10.0;
 
-    avgTime_Naive_Dynamic /= 10.0;
-    avgTime_Optim_Dynamic /= 10.0;
-    avgTime_Block_Dynamic /= 10.0;
+    avgTime_Naive_Dynamic /= 10.0; avgRate_Naive_Dynamic /= 10.0;
+    avgTime_Optim_Dynamic /= 10.0; avgRate_Optim_Dynamic /= 10.0;
+    avgTime_Block_Dynamic /= 10.0; avgRate_Block_Dynamic /= 10.0;
 
-    avgTime_Naive_Guided /= 10.0;
-    avgTime_Optim_Guided /= 10.0;
-    avgTime_Block_Guided /= 10.0;
+    avgTime_Naive_Guided /= 10.0;  avgRate_Naive_Guided /= 10.0;
+    avgTime_Optim_Guided /= 10.0;  avgRate_Optim_Guided /= 10.0;
+    avgTime_Block_Guided /= 10.0;  avgRate_Block_Guided /= 10.0;
 
-    avgRate_Naive_Static /= 10.0;
-    avgRate_Optim_Static /= 10.0;
-    avgRate_Block_Static /= 10.0;
-
-    avgRate_Naive_Dynamic /= 10.0;
-    avgRate_Optim_Dynamic /= 10.0;
-    avgRate_Block_Dynamic /= 10.0;
-
-    avgRate_Naive_Guided /= 10.0;
-    avgRate_Optim_Guided /= 10.0;
-    avgRate_Block_Guided /= 10.0;
 
     printf("\n\n\n   Total Averages for All 10 OpenMP Trials   \n");
     printf(      "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
@@ -383,6 +354,7 @@ void RunAllSerialTests (int n) {
   //--
   //-- Run the Naive Serial Test
   //--
+  //######################################################
   naive_serial (n, a, b, c);
 
   #if debug
@@ -413,6 +385,7 @@ void RunAllSerialTests (int n) {
   //--
   //-- Run the Optimized Serial Test
   //--
+  //######################################################
   optim_serial (n, a, b, c);
 
   #if debug
@@ -443,7 +416,7 @@ void RunAllSerialTests (int n) {
   //--
   //-- Run a series of Serial Blocking Tests
   //--
-
+  //######################################################
   block_serial(n, 16, a, b, c);
 
   #if debug
@@ -524,6 +497,7 @@ void RunAllThreadTests (int n, int t) {
   //--
   //-- Run the Naive OpenMP-Static Test
   //--
+  //######################################################
   naive_omp_s (n, t, a, b, c);
 
   #if debug
@@ -555,6 +529,7 @@ void RunAllThreadTests (int n, int t) {
   //--
   //-- Run the Naive OpenMP-Dynamic Test
   //--
+  //######################################################
   naive_omp_d (n, t, a, b, c);
 
   #if debug
@@ -585,6 +560,7 @@ void RunAllThreadTests (int n, int t) {
   //--
   //-- Run the Naive OpenMP-Guided Test
   //--
+  //######################################################
   naive_omp_g (n, t, a, b, c);
 
   #if debug
@@ -615,6 +591,7 @@ void RunAllThreadTests (int n, int t) {
   //--
   //-- Run the Optimized OpenMP Static Test
   //--
+  //######################################################
   optim_omp_s(n, t, a, b, c);
 
   #if debug
@@ -645,6 +622,7 @@ void RunAllThreadTests (int n, int t) {
   //--
   //-- Run the Optimized OpenMP Dynamic Test
   //--
+  //######################################################
   optim_omp_d(n, t, a, b, c);
 
   #if debug
@@ -675,6 +653,7 @@ void RunAllThreadTests (int n, int t) {
   //--
   //-- Run the Optimized OpenMP Grouped Test
   //--
+  //######################################################
   optim_omp_g(n, t, a, b, c);
 
   #if debug
@@ -705,6 +684,7 @@ void RunAllThreadTests (int n, int t) {
   //--
   //-- Run a series of Serial Blocking Tests
   //--
+  //######################################################
   block_omp_s(n, t, 16, a, b, c);
 
   #if debug
@@ -733,6 +713,7 @@ void RunAllThreadTests (int n, int t) {
   //--
   //-- Run a series of Dynamic Blocking Tests
   //--
+  //######################################################
   block_omp_d(n, t, 16, a, b, c);
 
   #if debug
@@ -764,6 +745,7 @@ void RunAllThreadTests (int n, int t) {
   //--
   //-- Run a series of Group Blocking Tests
   //--
+  //######################################################
   block_omp_g(n, t, 16, a, b, c);
 
   #if debug

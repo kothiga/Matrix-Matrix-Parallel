@@ -245,21 +245,12 @@ void RunAllTests (int n, int t) {
   //--
   //-- Allocate the storage for matrices.
   //--
+  float *a_d; float *b_d; float *c_d;
   float *a;   float *b;   float *c;
   a = (float *) malloc (n*n*sizeof (float));
   b = (float *) malloc (n*n*sizeof (float));
   c = (float *) malloc (n*n*sizeof (float));
 
-
-  //--
-  //-- Allocate Memory on the GPU
-  //--
-  /*
-  float *a_d; float *b_d; float *c_d;
-  cudaMalloc(&a_d, n*n*sizeof (float));
-  cudaMalloc(&b_d, n*n*sizeof (float));
-  cudaMalloc(&c_d, n*n*sizeof (float));
-  */
 
   //--
   //-- Assign randomly generated values to the input matrices B and C.
@@ -278,18 +269,41 @@ void RunAllTests (int n, int t) {
     }
   }
 
+  clear(n, a);
+
+
+
   //######################################################
   //--
   //-- Run the Naive Shared Test
   //--
-  cudaEventCreate(&time_begin); // create an event
+  //######################################################
+
+  //-- Allocate Memory on the GPU
+  cudaMalloc(&a_d, n*n*sizeof (float));
+  cudaMalloc(&b_d, n*n*sizeof (float));
+  cudaMalloc(&c_d, n*n*sizeof (float));
+
+  //-- copy data over to gpu
+  cudaMemcpy(a_d, a, n*n*sizeof(float), cudaMemcpyHostToDevice);
+  cudaMemcpy(b_d, b, n*n*sizeof(float), cudaMemcpyHostToDevice);
+  cudaMemcpy(c_d, c, n*n*sizeof(float), cudaMemcpyHostToDevice);
+
+  //-- create an event
+  cudaEventCreate(&time_begin);
   cudaEventCreate(&time_stop);
 
-  cudaEventRecord(time_begin);  // recored when the event begin
+  //-- recored when the event begin
+  cudaEventRecord(time_begin);
 
-  naive_shared (n, t, a, b, c); // run the test
+  //-- run the test
+  naive_shared<<t,n>>(n, t, a, b, c);
 
-  cudaEventRecord(time_stop);   // record when the event ended
+  //-- record when the event ended
+  cudaEventRecord(time_stop);
+
+  //-- copy the results out of gpu
+  cudaMemcpy(a, a_d, n*n*sizeof(float), cudaMemcpyDeviceToHost);
 
 
   #if debug
@@ -306,8 +320,18 @@ void RunAllTests (int n, int t) {
   char naive_shared_desc[] = "Naive Shared.";
   stats(naive_shared_desc, n, t, &T, &R);
 
+  //-- add to averages
   avgTime_Naive_Shared += T;
   avgRate_Naive_Shared += R;
+
+  //-- destroy the cuda events
+  cudaEventDestroy(time_begin);
+  cudaEventDestroy(time_end);
+
+  //-- Deallocate device Memory
+  cudaFree(a_d);
+  cudaFree(b_d);
+  cudaFree(c_d);
 
   //-- Clear out Mat A
   clear(n, a);
@@ -347,6 +371,10 @@ void RunAllTests (int n, int t) {
   avgTime_Optim_Shared += T;
   avgRate_Optim_Shared += R;
 
+  //-- destroy the cuda events
+  cudaEventDestroy(time_begin);
+  cudaEventDestroy(time_end);
+
   //-- Clear out Mat A
   clear(n, a);
 
@@ -384,6 +412,10 @@ void RunAllTests (int n, int t) {
 
   avgTime_Block_Shared += T;
   avgRate_Block_Shared += R;
+
+  //-- destroy the cuda events
+  cudaEventDestroy(time_begin);
+  cudaEventDestroy(time_end);
 
   //-- Clear out Mat A
   clear(n, a);
@@ -440,8 +472,6 @@ int validate (int n, float *S, float *X) {
             std::cout << X[i*n + j] << " ";
           } std::cout << std::endl;
         }
-
-
         return 1;
       }
     }
