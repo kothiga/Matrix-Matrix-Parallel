@@ -1,15 +1,15 @@
 /*
- * CPSC 4210
- *  - High Performance Parallel Computing
- *
- *    Name: Austin Kothig
- *      ID: 001182645
- *     Sem: Spring 2018
- *
- * Purpose:
- *
- *
- */
+* CPSC 4210
+*  - High Performance Parallel Computing
+*
+*    Name: Austin Kothig
+*      ID: 001182645
+*     Sem: Spring 2018
+*
+* Purpose:
+*
+*
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,12 +20,13 @@
 
 
 /* Enable / Disable debugging */
-#define debug 1
+#define debug 0
 
+/* Thread Count */
+#define BLOCK 16
 
 /* For running all Matrix Matrix Multiplication Tests */
 void RunAllTests (int n, int t);
-
 
 /* Helper Function Prototypes */
 float randomize   (int *seed);
@@ -35,46 +36,101 @@ void  help        ( );
 void  getGPUStats (cudaDeviceProp& prop);
 int   validate    (int n, float *S, float *X);
 
-
 /* Matrix Multiplication Prototypes*/
-void naive_shared (int n, int t, float *A, float *B, float *C);
-void optim_shared (int n, int t, float *A, float *B, float *C);
-void block_shared (int n, int t, int b, float *A, float *B, float *C);
+void global_cuda (int n, int t, float *A, float *B, float *C);
+void shared_cuda (int n, int t, float *A, float *B, float *C);
 
-void naive_global (int n, int t, float *A, float *B, float *C);
-void optim_global (int n, int t, float *A, float *B, float *C);
-void block_global (int n, int t, int b, float *A, float *B, float *C);
+
+
+/* Kernal Function Implementation */
+__global__
+void global_cuda_kernal(int n, float* A, float* B, float* C) {
+
+  //-- get current position
+  const unsigned int ROW = blockIdx.y * blockDim.y + threadIdx.y;
+  const unsigned int COL = blockIdx.x * blockDim.x + threadIdx.x;
+
+  float sum = 0.f;
+
+  //-- make sure we are valid
+  if (ROW < n && COL < n) {
+
+    //-- compute the element in block
+    for (int i = 0; i < n; i++) {
+      sum += B[ROW*n + i] * C[i*n + COL];
+    }
+  }
+
+  //-- write sum to device memory
+  A[ROW*n + COL] = sum;
+}
+
+__global__
+void shared_cuda_kernal(int n, float* A, float* B, float* C) {
+
+  //-- get the current for each core
+  const unsigned int tx = threadIdx.x;
+  const unsigned int ty = threadIdx.y;
+
+  const unsigned int I = blockIdx.y * BLOCK + ty;
+  const unsigned int J = blockIdx.x * BLOCK + tx;
+
+  const unsigned int gy = gridDim.y;
+
+  //-- allocate shared memory on the device
+  __shared__ float d_b[BLOCK][BLOCK], d_c[BLOCK][BLOCK];
+
+  //-- check that we are in range
+  if (I < n && J < n) {
+
+    float sum = 0.f;
+
+    //-- scan through the elements in grid
+    for (int i = 0; i < gy; i++) {
+
+      //-- load the block from device memory to shared memory
+      d_b[ty][tx] = B[I*n + i*BLOCK + tx];
+      d_c[ty][tx] = C[J+n*(i*BLOCK + ty)];
+
+      //-- wait for all threads to load device memory
+      //-- into shared memory before continuing.
+      __syncthreads();
+
+
+      //-- multiply the shared memories together
+      for (int j = 0; j < BLOCK; j++) {
+        sum += d_b[ty][j] * d_c[j][tx];
+      }
+
+      //-- wait for all calculations to finish
+      __syncthreads();
+    }
+
+    //-- write to device memory
+    A[I*n + J] = sum;
+  }
+}
+
+
 
 #if debug
+
 /* Used to build a validation Matrix */
 void optim_serial (int n, float *A, float *B, float *C);
+
+/* Variables for error checking */
+int ErrorCount = 0;
+float *s;
+
 #endif
+
 
 /* Global Variables */
 cudaEvent_t time_begin;
 cudaEvent_t time_stop;
 
-double avgTime_Naive_Shared;
-double avgTime_Optim_Shared;
-double avgTime_Block_Shared;
-
-double avgTime_Naive_Global;
-double avgTime_Optim_Global;
-double avgTime_Block_Global;
-
-double avgRate_Naive_Shared;
-double avgRate_Optim_Shared;
-double avgRate_Block_Shared;
-
-double avgRate_Naive_Global;
-double avgRate_Optim_Global;
-double avgRate_Block_Global;
-
-
-#if debug
-int ErrorCount = 0;
-float *s;
-#endif
+double avgTime_Global;  double avgRate_Global;
+double avgTime_Shared;  double avgRate_Shared;
 
 
 
@@ -93,12 +149,12 @@ int main (int argc, char *argv[]) {
   int opt;
   while ((opt = getopt(argc, argv, "hn:t:")) != -1) {
     switch (opt) {
-      case 'h': help(); return 0; break;
+      case 'h': help(); exit(0); break;
       case 'n': n = atoi(optarg); break;
       case 't': t = atoi(optarg); break;
       default :
       printf("wrong argument\n");
-      return 0; break;
+      exit(0); break;
     }
   }
 
@@ -138,17 +194,17 @@ int main (int argc, char *argv[]) {
   //--
   int seed = 123456789;
 
-    for (i = 0; i < n; i++) {
-      for (j = 0; j < n; j++) {
-        b[i*n + j] = randomize (&seed);
-      }
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      b[i*n + j] = randomize (&seed);
     }
+  }
 
-    for (i = 0; i < n; i++) {
-      for (j = 0; j < n; j++) {
-        c[i*n + j] = randomize (&seed);
-      }
+  for (i = 0; i < n; i++) {
+    for (j = 0; j < n; j++) {
+      c[i*n + j] = randomize (&seed);
     }
+  }
 
   //-- allocate the space for s
   s = (float *) malloc (n*n*sizeof (float));
@@ -179,16 +235,13 @@ int main (int argc, char *argv[]) {
   getGPUStats(prop);
 
   printf ( "\n" );
-  //TODO: printf ( "  Number of processors available = %d\n", omp_get_num_procs());
-  //TODO: printf ( "  Number of threads              = %d\n", t);
+  printf ( "  Thread Blocks = %d\n", (((n+BLOCK-1)/BLOCK)*((n+BLOCK-1)/BLOCK))-((n+BLOCK-1)/BLOCK));
+  printf ( "  Threads Per Block %d\n", BLOCK*BLOCK);
 
-  avgTime_Naive_Shared = 0.0;
-  avgTime_Optim_Shared = 0.0;
-  avgTime_Block_Shared = 0.0;
 
-  avgRate_Naive_Shared = 0.0;
-  avgRate_Optim_Shared = 0.0;
-  avgRate_Block_Shared = 0.0;
+  avgTime_Global = 0.0;  avgRate_Global = 0.0;
+  avgTime_Shared = 0.0;  avgRate_Shared = 0.0;
+
 
   for (int i = 1; i <= 10; i++) {
     printf("\n\n\n\n   Beginning Trial %d, of Matrix Size %d\n", i, n);
@@ -197,20 +250,14 @@ int main (int argc, char *argv[]) {
     RunAllTests(n, t);
   }
 
-  avgTime_Naive_Shared /= 10.0;
-  avgTime_Optim_Shared /= 10.0;
-  avgTime_Block_Shared /= 10.0;
-
-  avgRate_Naive_Shared /= 10.0;
-  avgRate_Optim_Shared /= 10.0;
-  avgRate_Block_Shared /= 10.0;
+  avgTime_Global /= 10.0;  avgRate_Global /= 10.0;
+  avgTime_Shared /= 10.0;  avgRate_Shared /= 10.0;
 
 
-  printf("\n\n\n   Total Averages for All 10 Serial Trials   \n");
+  printf("\n\n\n   Total Averages for All 10 CUDA Trials   \n");
   printf(      "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
-  printf("  Naive Time %f\n  Naive Rate %f\n\n", avgTime_Naive_Shared, avgRate_Naive_Shared);
-  printf("  Optim Time %f\n  Optim Rate %f\n\n", avgTime_Optim_Shared, avgRate_Optim_Shared);
-  printf("  Block Time %f\n  Block Rate %f\n\n", avgTime_Block_Shared, avgRate_Block_Shared);
+  printf("  Global Time %f\n  Global Rate %f\n\n", avgTime_Global, avgRate_Global);
+  printf("  Shared Time %f\n  Shared Rate %f\n\n", avgTime_Shared, avgRate_Shared);
 
 
   //--
@@ -245,7 +292,6 @@ void RunAllTests (int n, int t) {
   //--
   //-- Allocate the storage for matrices.
   //--
-  float *a_d; float *b_d; float *c_d;
   float *a;   float *b;   float *c;
   a = (float *) malloc (n*n*sizeof (float));
   b = (float *) malloc (n*n*sizeof (float));
@@ -275,63 +321,40 @@ void RunAllTests (int n, int t) {
 
   //######################################################
   //--
-  //-- Run the Naive Shared Test
+  //-- Run the Global CUDA Test
   //--
   //######################################################
-
-  //-- Allocate Memory on the GPU
-  cudaMalloc(&a_d, n*n*sizeof (float));
-  cudaMalloc(&b_d, n*n*sizeof (float));
-  cudaMalloc(&c_d, n*n*sizeof (float));
-
-  //-- copy data over to gpu
-  cudaMemcpy(a_d, a, n*n*sizeof(float), cudaMemcpyHostToDevice);
-  cudaMemcpy(b_d, b, n*n*sizeof(float), cudaMemcpyHostToDevice);
-  cudaMemcpy(c_d, c, n*n*sizeof(float), cudaMemcpyHostToDevice);
 
   //-- create an event
   cudaEventCreate(&time_begin);
   cudaEventCreate(&time_stop);
 
-  //-- recored when the event begin
-  cudaEventRecord(time_begin);
-
   //-- run the test
-  naive_shared<<t,n>>(n, t, a, b, c);
-
-  //-- record when the event ended
-  cudaEventRecord(time_stop);
-
-  //-- copy the results out of gpu
-  cudaMemcpy(a, a_d, n*n*sizeof(float), cudaMemcpyDeviceToHost);
+  global_cuda(n, t, a, b, c);
 
 
   #if debug
   //-- Optional Validation
   if (validate (n, s, a)) {
     printf ("\n\n\n###################################\n\n\n");
-    printf ("naive_shared is incorrect!!");
+    printf ("global_cuda is incorrect!!");
     printf ("\n\n\n###################################\n\n\n");
     ErrorCount++;
   }
   #endif
 
   //-- Display Stats
-  char naive_shared_desc[] = "Naive Shared.";
-  stats(naive_shared_desc, n, t, &T, &R);
+  char global_cuda_desc[] = "Global CUDA.";
+  stats(global_cuda_desc, n, t, &T, &R);
 
   //-- add to averages
-  avgTime_Naive_Shared += T;
-  avgRate_Naive_Shared += R;
+  avgTime_Global += T;
+  avgRate_Global += R;
 
   //-- destroy the cuda events
   cudaEventDestroy(time_begin);
-  cudaEventDestroy(time_end);
+  cudaEventDestroy(time_stop);
 
-  //-- Deallocate device Memory
-  cudaFree(a_d);
-  cudaFree(b_d);
-  cudaFree(c_d);
 
   //-- Clear out Mat A
   clear(n, a);
@@ -342,83 +365,42 @@ void RunAllTests (int n, int t) {
 
   //######################################################
   //--
-  //-- Run the Optimized shared Test
+  //-- Run the Shared CUDA Test
   //--
-  cudaEventCreate(&time_begin); // create an event
-  cudaEventCreate(&time_stop);
-
-  cudaEventRecord(time_begin);  // recored when the event begin
-
-  optim_shared (n, t, a, b, c); // run the test
-
-  cudaEventRecord(time_stop);   // record when the event ended
-
-
-  #if debug
-  //-- Optional Validation
-  if (validate (n, s, a)) {
-    printf ("\n\n\n###################################\n\n\n");
-    printf ("optim_shared is incorrect!!");
-    printf ("\n\n\n###################################\n\n\n");
-    ErrorCount++;
-  }
-  #endif
-
-  //-- Display Stats
-  char optim_shared_desc[] = "Loop Optimized Shared.";
-  stats(optim_shared_desc, n, t, &T, &R);
-
-  avgTime_Optim_Shared += T;
-  avgRate_Optim_Shared += R;
-
-  //-- destroy the cuda events
-  cudaEventDestroy(time_begin);
-  cudaEventDestroy(time_end);
-
-  //-- Clear out Mat A
-  clear(n, a);
-
-
-
-
-
   //######################################################
-  //--
-  //-- Run a series of Blocking Shared Test
-  //--
-  cudaEventCreate(&time_begin); // create an event
+
+  //-- create an event
+  cudaEventCreate(&time_begin);
   cudaEventCreate(&time_stop);
 
-  cudaEventRecord(time_begin);  // recored when the event begin
-
-  block_shared(n, t, 16, a, b, c); // run the test
-
-  cudaEventRecord(time_stop);   // record when the event ended
+  //-- run the test
+  shared_cuda (n, t, a, b, c);
 
 
   #if debug
   //-- Optional Validation
   if (validate (n, s, a)) {
     printf ("\n\n\n###################################\n\n\n");
-    printf ("Blocking Shared is incorrect!!");
+    printf ("shared_cuda is incorrect!!");
     printf ("\n\n\n###################################\n\n\n");
     ErrorCount++;
   }
   #endif
 
   //-- Display Stats
-  char blocking_shared_desc[] = "Blocking-16 Shared.";
-  stats(blocking_shared_desc, n, t, &T, &R);
+  char shared_cuda_desc[] = "Shared CUDA.";
+  stats(shared_cuda_desc, n, t, &T, &R);
 
-  avgTime_Block_Shared += T;
-  avgRate_Block_Shared += R;
+  avgTime_Shared += T;
+  avgRate_Shared += R;
 
   //-- destroy the cuda events
   cudaEventDestroy(time_begin);
-  cudaEventDestroy(time_end);
+  cudaEventDestroy(time_stop);
 
   //-- Clear out Mat A
   clear(n, a);
+
 
   //-- Deallocate the used memory
   free(a);   free(b);   free(c);
@@ -447,7 +429,7 @@ void clear (int n, float *X) {
   int i ,j;
   for (i = 0; i < n; i++) {
     for (j = 0; j < n; j++) {
-      X[i*n + j] = 0.0;
+      X[i*n + j] = 0.f;
     }
   }
 }
@@ -462,30 +444,16 @@ int validate (int n, float *S, float *X) {
   int i, j;
   for (i = 0; i < n; i++) {
     for (j = 0; j < n; j++) {
-      if (S[i*n + j] != X[i*n + j]) {
+      if (abs(S[i*n + j] - X[i*n + j]) > 0.001) {
 
-        for (i = 0; i < n; i++) {
-          for (j = 0; j < n; j++) {
-            std::cout << S[i*n + j] << " ";
-          } std::cout << "      \t";
-          for (j = 0; j < n; j++) {
-            std::cout << X[i*n + j] << " ";
-          } std::cout << std::endl;
-        }
+        std::cout << "\n\n\n\n";
+        std::cout << "Fail at pos " << i*n << " x " << j << std::endl;
+        std::cout << S[i*n + j] << " != " << X[i*n + j] << std::endl;
+
         return 1;
       }
     }
   }
-  /*
-  for (i = 0; i < n; i++) {
-    for (j = 0; j < n; j++) {
-      std::cout << S[i*n + j] << " ";
-    } std::cout << "      \t";
-    for (j = 0; j < n; j++) {
-      std::cout << X[i*n + j] << " ";
-    } std::cout << std::endl;
-  }
-  */
 
   return 0;
 }
@@ -508,7 +476,9 @@ void stats (char* desc, int n, int thread, double *T, double *R) {
 
   cudaEventElapsedTime(&time, time_begin, time_stop);
 
-  rate = ( double ) ( ops ) / (time / 1000) / 1000000.0;
+  time /= 1000.f;
+
+  rate = ( double ) ( ops ) / (time) / 1000000.0;
 
   printf("\n############################################\n");
   printf("  Test    = %s\n", desc);
@@ -543,10 +513,10 @@ void help () {
 //--
 void getGPUStats (cudaDeviceProp &prop) {
 
-    int count;
-    cudaGetDeviceCount(&count);
+  int count;
+  cudaGetDeviceCount(&count);
 
-    for (int i = 0; i < count; i++) {
+  for (int i = 0; i < count; i++) {
     cudaGetDeviceProperties(&prop, i);
     std::cout << "---------------------------------------------------------------" << std::endl;
     std::cout << "Name                       " << prop.name                     << std::endl;
@@ -567,7 +537,7 @@ void getGPUStats (cudaDeviceProp &prop) {
     std::cout << "Multiprocessor count       " << prop.multiProcessorCount << std::endl;
     std::cout << "Device overlap             " << prop.deviceOverlap       << std::endl << std::endl;
     std::cout << "Maximum resident threads   " << prop.maxThreadsPerMultiProcessor << std::endl
-              << "  per multi-processor  \n";
+    << "  per multi-processor  \n";
 
     std::cout << std::endl;
   }
@@ -579,69 +549,104 @@ void getGPUStats (cudaDeviceProp &prop) {
 //--
 
 //--
-//-- naive_shared : simple row by column for fixed A.
+//-- global_cuda : use global memory on GPU to multiply two matracies
 //--
-//-- Notes : poor cache performance, using shared memory on GPU
-//--
-void naive_shared (int n, int t, float *A, float *B, float *C) {
+void global_cuda (int n, int t, float *A, float *B, float *C) {
 
-  int i, j, k;
+  //-- initialize variables
+  float *d_A; float *d_B; float *d_C;
 
-  for (i = 0; i < n; i++) {
-    for (j = 0; j < n; j++) {
-      for (k = 0; k < n; k++) {
-        A[i*n + j] = A[i*n + j] + (B[i*n + k] * C[k*n + j]);
-      }
-    }
-  }
+  //-- Allocate Memory on the GPU
+  cudaMalloc(&d_A, n*n*sizeof (float));
+  cudaMalloc(&d_B, n*n*sizeof (float));
+  cudaMalloc(&d_C, n*n*sizeof (float));
+
+  //-- copy data over to gpu
+  cudaMemcpy(d_A, A, n*n*sizeof(float), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_B, B, n*n*sizeof(float), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_C, C, n*n*sizeof(float), cudaMemcpyHostToDevice);
+
+  //-- initialize blocks and threads per blocks
+  dim3 DimBlock(BLOCK, BLOCK);
+  dim3 DimGrid((n + DimBlock.x - 1) / DimBlock.x,
+               (n + DimBlock.y - 1) / DimBlock.y);
+  size_t SharedMemBytes = 128;
+
+  //-- recored when the event begin
+  cudaEventRecord(time_begin);
+
+
+  //-- Start the Kernal
+  global_cuda_kernal<<<DimGrid,DimBlock,SharedMemBytes>>>(n, d_A, d_B, d_C);
+
+
+  //-- sync the threads
+  cudaThreadSynchronize();
+
+  //-- record when the event ended
+  cudaEventRecord(time_stop);
+
+  //-- sync the events
+  cudaEventSynchronize(time_stop);
+
+  //-- copy the results out of gpu
+  cudaMemcpy(A, d_A, n*n*sizeof(float), cudaMemcpyDeviceToHost);
+
+  //-- Deallocate device Memory
+  cudaFree(d_A);
+  cudaFree(d_B);
+  cudaFree(d_C);
 }
 
 
 //--
-//-- optim_serial : kij row by row with fixed B.
+//-- shared_cuda : use shared memory on GPU to multiply two matracies
 //--
-//-- notes : good cache performance, using shared memory on GPU
-//--
-void optim_shared (int n, int t, float *A, float *B, float *C) {
+void shared_cuda (int n, int t, float *A, float *B, float *C) {
 
-  int i, j, k;
-  float r;
+  //-- initialize variables
+  float *d_A; float *d_B; float *d_C;
 
-  for (k = 0; k < n; k++) {
-    for (i = 0; i < n; i++) {
-      r = B[i*n + k];
-      for (j = 0; j < n; j++) {
-        A[i*n + j] += r * C[k*n + j];
-      }
-    }
-  }
-}
+  //-- Allocate Memory on the GPU
+  cudaMalloc(&d_A, n*n*sizeof (float));
+  cudaMalloc(&d_B, n*n*sizeof (float));
+  cudaMalloc(&d_C, n*n*sizeof (float));
+
+  //-- copy data over to gpu
+  cudaMemcpy(d_A, A, n*n*sizeof(float), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_B, B, n*n*sizeof(float), cudaMemcpyHostToDevice);
+  cudaMemcpy(d_C, C, n*n*sizeof(float), cudaMemcpyHostToDevice);
+
+  //-- initialize blocks and threads per blocks
+  dim3 DimBlock(BLOCK, BLOCK);
+  dim3 DimGrid((n + DimBlock.x - 1) / DimBlock.x,
+               (n + DimBlock.y - 1) / DimBlock.y);
+  size_t SharedMemBytes = 128;
 
 
-//--
-//-- block_serial : ijk based blocks
-//--
-//-- notes : compromise of temporal and spatial locality, using shared memory on GPU
-//--
-void block_shared (int n, int t, int b, float *A, float *B, float *C) {
+  //-- recored when the event begin
+  cudaEventRecord(time_begin);
 
-  int i, j, k, en, jj, kk;
-  float sum = 0.0;
-  en = b * (n/b);
 
-  for (kk = 0; kk < en; kk += b) {
-    for (jj = 0; jj < en; jj += b) {
-      for (i = 0; i < n; i++) {
-        for (j = jj; j < jj+b; j++) {
-          sum = A[i*n + j];
-          for (k = kk; k < kk+b; k++) {
-            sum += B[i*n + k] * C[k*n + j];
-          }
-          A[i*n + j] = sum;
-        }
-      }
-    }
-  }
+  //-- Start the Kernal
+  shared_cuda_kernal<<<DimGrid,DimBlock,SharedMemBytes>>>(n, d_A, d_B, d_C);
+
+  //-- sync the threads
+  cudaThreadSynchronize();
+
+  //-- record when the event ended
+  cudaEventRecord(time_stop);
+
+  //-- sync the events
+  cudaEventSynchronize(time_stop);
+
+  //-- copy the results out of gpu
+  cudaMemcpy(A, d_A, n*n*sizeof(float), cudaMemcpyDeviceToHost);
+
+  //-- Deallocate device Memory
+  cudaFree(d_A);
+  cudaFree(d_B);
+  cudaFree(d_C);
 }
 
 
