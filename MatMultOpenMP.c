@@ -54,37 +54,22 @@ void block_omp_g  (int n, int t, int b, double **A, double **B, double **C);
 double time_begin;
 double time_stop;
 
-double avgTime_Naive_Serial;
-double avgTime_Optim_Serial;
-double avgTime_Block_Serial;
+double avgTime_Naive_Serial;  double avgRate_Naive_Serial;
+double avgTime_Optim_Serial;  double avgRate_Optim_Serial;
+double avgTime_Block_Serial;  double avgRate_Block_Serial;
 
-double avgTime_Naive_Static;
-double avgTime_Optim_Static;
-double avgTime_Block_Static;
+double avgTime_Naive_Static;  double avgRate_Naive_Static;
+double avgTime_Optim_Static;  double avgRate_Optim_Static;
+double avgTime_Block_Static;  double avgRate_Block_Static;
 
-double avgTime_Naive_Dynamic;
-double avgTime_Optim_Dynamic;
-double avgTime_Block_Dynamic;
+double avgTime_Naive_Dynamic; double avgRate_Naive_Dynamic;
+double avgTime_Optim_Dynamic; double avgRate_Optim_Dynamic;
+double avgTime_Block_Dynamic; double avgRate_Block_Dynamic;
 
-double avgTime_Naive_Guided;
-double avgTime_Optim_Guided;
-double avgTime_Block_Guided;
+double avgTime_Naive_Guided;  double avgRate_Naive_Guided;
+double avgTime_Optim_Guided;  double avgRate_Optim_Guided;
+double avgTime_Block_Guided;  double avgRate_Block_Guided;
 
-double avgRate_Naive_Serial;
-double avgRate_Optim_Serial;
-double avgRate_Block_Serial;
-
-double avgRate_Naive_Static;
-double avgRate_Optim_Static;
-double avgRate_Block_Static;
-
-double avgRate_Naive_Dynamic;
-double avgRate_Optim_Dynamic;
-double avgRate_Block_Dynamic;
-
-double avgRate_Naive_Guided;
-double avgRate_Optim_Guided;
-double avgRate_Block_Guided;
 
 #define DYNAMC_CHUNK 128
 
@@ -92,7 +77,6 @@ double avgRate_Block_Guided;
 int ErrorCount = 0;
 double **s;
 #endif
-
 
 
 //--

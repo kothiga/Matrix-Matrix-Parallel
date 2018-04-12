@@ -1,0 +1,268 @@
+
+Dense NxN
+  CUDA version.
+
+  Matrix multiplication tests.
+  Floating point OPS roughly = 2147483648
+---------------------------------------------------------------
+Name                       NVS 315
+GPU clock rate             1021.48 MHz
+Registers Per Block        32768
+Compute capability         2.1
+Total global memory        963.938 MB
+Total constant memory      64 KB
+Shared memory per block    48 KB
+Maximum threads per block  1024
+
+Maximum threads along   X  1024
+                        Y  1024
+                        Z  64
+
+Maximum grid size along X  65535
+                        Y  65535
+                        Z  65535
+
+Warp size                  32
+Multiprocessor count       1
+Device overlap             1
+
+Maximum resident threads   1536
+  per multi-processor  
+
+
+  Thread Blocks = 4032
+  Threads Per Block 256
+
+
+
+
+   Beginning Trial 1, of Matrix Size 1024
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Global CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.499734
+  Rate = MegaOPS/dT          = 4297.250493
+
+############################################
+  Test    = Shared CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.184144
+  Rate = MegaOPS/dT          = 11661.969307
+
+
+
+
+   Beginning Trial 2, of Matrix Size 1024
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Global CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.499938
+  Rate = MegaOPS/dT          = 4295.500098
+
+############################################
+  Test    = Shared CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.184151
+  Rate = MegaOPS/dT          = 11661.529559
+
+
+
+
+   Beginning Trial 3, of Matrix Size 1024
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Global CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.499577
+  Rate = MegaOPS/dT          = 4298.600960
+
+############################################
+  Test    = Shared CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.184162
+  Rate = MegaOPS/dT          = 11660.847355
+
+
+
+
+   Beginning Trial 4, of Matrix Size 1024
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Global CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.499505
+  Rate = MegaOPS/dT          = 4299.221874
+
+############################################
+  Test    = Shared CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.184128
+  Rate = MegaOPS/dT          = 11662.984817
+
+
+
+
+   Beginning Trial 5, of Matrix Size 1024
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Global CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.498531
+  Rate = MegaOPS/dT          = 4307.624519
+
+############################################
+  Test    = Shared CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.184203
+  Rate = MegaOPS/dT          = 11658.227793
+
+
+
+
+   Beginning Trial 6, of Matrix Size 1024
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Global CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.497223
+  Rate = MegaOPS/dT          = 4318.950976
+
+############################################
+  Test    = Shared CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.184152
+  Rate = MegaOPS/dT          = 11661.502194
+
+
+
+
+   Beginning Trial 7, of Matrix Size 1024
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Global CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.495839
+  Rate = MegaOPS/dT          = 4331.010744
+
+############################################
+  Test    = Shared CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.184162
+  Rate = MegaOPS/dT          = 11660.817163
+
+
+
+
+   Beginning Trial 8, of Matrix Size 1024
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Global CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.494571
+  Rate = MegaOPS/dT          = 4342.110303
+
+############################################
+  Test    = Shared CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.184162
+  Rate = MegaOPS/dT          = 11660.831316
+
+
+
+
+   Beginning Trial 9, of Matrix Size 1024
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Global CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.496131
+  Rate = MegaOPS/dT          = 4328.459341
+
+############################################
+  Test    = Shared CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.184169
+  Rate = MegaOPS/dT          = 11660.383163
+
+
+
+
+   Beginning Trial 10, of Matrix Size 1024
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+############################################
+  Test    = Global CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.493310
+  Rate = MegaOPS/dT          = 4353.213250
+
+############################################
+  Test    = Shared CUDA.
+  N       = 1024
+  Threads = -1
+  Floating point OPS roughly = 2147483648
+  Elapsed time dT            = 0.184186
+  Rate = MegaOPS/dT          = 11659.328488
+
+
+
+   Total Averages for All 10 CUDA Trials   
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  Global Time 0.497436
+  Global Rate 4317.194256
+
+  Shared Time 0.184162
+  Shared Rate 11660.842115
+
+
+Dense NxN:
+  Normal end of execution.
