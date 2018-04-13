@@ -18,37 +18,42 @@
 #include <getopt.h>
 #include <iostream>
 
-
 /* Enable / Disable debugging */
 #define debug 0
 
-/* Thread Count */
+
+/* Block Size specification */
 #define BLOCK 16
 
+
 /* For running all Matrix Matrix Multiplication Tests */
-void RunAllTests (int n, int t);
+void RunAllTests (int n);
+
 
 /* Helper Function Prototypes */
 float randomize   (int *seed);
 void  clear       (int n, float *X);
-void  stats       (char* desc, int n, int threads, double *T, double *R);
+void  stats       (char* desc, int n, double *T, double *R);
 void  help        ( );
 void  getGPUStats (cudaDeviceProp& prop);
 int   validate    (int n, float *S, float *X);
 
+
 /* Matrix Multiplication Prototypes*/
-void global_cuda (int n, int t, float *A, float *B, float *C);
-void shared_cuda (int n, int t, float *A, float *B, float *C);
+void global_cuda (int n, float *A, float *B, float *C);
+void shared_cuda (int n, float *A, float *B, float *C);
 
 
-
-/* Kernal Function Implementation */
+/* kernel Function Implementation */
 __global__
-void global_cuda_kernal(int n, float* A, float* B, float* C) {
+void global_cuda_kernel(int n, float* A, float* B, float* C) {
 
-  //-- get current position
-  const unsigned int ROW = blockIdx.y * blockDim.y + threadIdx.y;
-  const unsigned int COL = blockIdx.x * blockDim.x + threadIdx.x;
+  //-- get current position to be calculated
+  const unsigned int tx = threadIdx.x;
+  const unsigned int ty = threadIdx.y;
+
+  const unsigned int ROW = blockIdx.y * blockDim.y + ty;
+  const unsigned int COL = blockIdx.x * blockDim.x + tx;
 
   float sum = 0.f;
 
@@ -66,31 +71,33 @@ void global_cuda_kernal(int n, float* A, float* B, float* C) {
 }
 
 __global__
-void shared_cuda_kernal(int n, float* A, float* B, float* C) {
+void shared_cuda_kernel(int n, float* A, float* B, float* C) {
 
-  //-- get the current for each core
+  //-- get current position to be calculated
   const unsigned int tx = threadIdx.x;
   const unsigned int ty = threadIdx.y;
 
-  const unsigned int I = blockIdx.y * BLOCK + ty;
-  const unsigned int J = blockIdx.x * BLOCK + tx;
+  const unsigned int ROW = blockIdx.y * blockDim.y + ty;
+  const unsigned int COL = blockIdx.x * blockDim.x + tx;
 
-  const unsigned int gy = gridDim.y;
+  const unsigned int grid = gridDim.y;
+
 
   //-- allocate shared memory on the device
   __shared__ float d_b[BLOCK][BLOCK], d_c[BLOCK][BLOCK];
 
   //-- check that we are in range
-  if (I < n && J < n) {
+  if (ROW < n && COL < n) {
 
     float sum = 0.f;
 
-    //-- scan through the elements in grid
-    for (int i = 0; i < gy; i++) {
+    //-- scan through the elements of the grid
+    for (int i = 0; i < grid; i++) {
 
       //-- load the block from device memory to shared memory
-      d_b[ty][tx] = B[I*n + i*BLOCK + tx];
-      d_c[ty][tx] = C[J+n*(i*BLOCK + ty)];
+      d_b[ty][tx] = B[ROW*n + i*BLOCK + tx];
+      d_c[ty][tx] = C[COL+n*(i*BLOCK + ty)];
+
 
       //-- wait for all threads to load device memory
       //-- into shared memory before continuing.
@@ -107,7 +114,7 @@ void shared_cuda_kernal(int n, float* A, float* B, float* C) {
     }
 
     //-- write to device memory
-    A[I*n + J] = sum;
+    A[ROW*n + COL] = sum;
   }
 }
 
@@ -143,15 +150,13 @@ int main (int argc, char *argv[]) {
   //-- @@@ SH Note 1b:
   //--  These values need to be read in from command line.
   int n = -1;
-  int t = -1;
 
   //-- loop through arguments
   int opt;
-  while ((opt = getopt(argc, argv, "hn:t:")) != -1) {
+  while ((opt = getopt(argc, argv, "hn:")) != -1) {
     switch (opt) {
       case 'h': help(); exit(0); break;
       case 'n': n = atoi(optarg); break;
-      case 't': t = atoi(optarg); break;
       default :
       printf("wrong argument\n");
       exit(0); break;
@@ -164,9 +169,6 @@ int main (int argc, char *argv[]) {
     printf("\n\n./MatMultCUDA: Missing required n!!\n");
     help();
     return 0;
-  } if (t == -1) {
-    // -- make t max if not specified
-    //TODO: t = omp_get_max_threads();
   }
 
 
@@ -183,7 +185,6 @@ int main (int argc, char *argv[]) {
   //-- generate a validation matrix, and give debug stats
   //--
   printf("n is %d\n", n);
-  printf("t is %d\n", t);
 
   int i, j;
   float* b = (float *) malloc (n*n*sizeof (float));
@@ -247,7 +248,7 @@ int main (int argc, char *argv[]) {
     printf("\n\n\n\n   Beginning Trial %d, of Matrix Size %d\n", i, n);
     printf(        "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
     //-- call the matrix multiplication routines for serial cases
-    RunAllTests(n, t);
+    RunAllTests(n);
   }
 
   avgTime_Global /= 10.0;  avgRate_Global /= 10.0;
@@ -281,7 +282,7 @@ int main (int argc, char *argv[]) {
 //-- Run a series of NxN Matrix Matrix multiplication
 //--  using different stratagies
 //--
-void RunAllTests (int n, int t) {
+void RunAllTests (int n) {
 
   //--
   //-- Variables used in this function
@@ -330,7 +331,7 @@ void RunAllTests (int n, int t) {
   cudaEventCreate(&time_stop);
 
   //-- run the test
-  global_cuda(n, t, a, b, c);
+  global_cuda(n, a, b, c);
 
 
   #if debug
@@ -345,7 +346,7 @@ void RunAllTests (int n, int t) {
 
   //-- Display Stats
   char global_cuda_desc[] = "Global CUDA.";
-  stats(global_cuda_desc, n, t, &T, &R);
+  stats(global_cuda_desc, n, &T, &R);
 
   //-- add to averages
   avgTime_Global += T;
@@ -374,7 +375,7 @@ void RunAllTests (int n, int t) {
   cudaEventCreate(&time_stop);
 
   //-- run the test
-  shared_cuda (n, t, a, b, c);
+  shared_cuda (n, a, b, c);
 
 
   #if debug
@@ -389,7 +390,7 @@ void RunAllTests (int n, int t) {
 
   //-- Display Stats
   char shared_cuda_desc[] = "Shared CUDA.";
-  stats(shared_cuda_desc, n, t, &T, &R);
+  stats(shared_cuda_desc, n, &T, &R);
 
   avgTime_Shared += T;
   avgRate_Shared += R;
@@ -462,7 +463,7 @@ int validate (int n, float *S, float *X) {
 //--
 //-- Stats : give the user the stats of this implementation
 //--
-void stats (char* desc, int n, int thread, double *T, double *R) {
+void stats (char* desc, int n, double *T, double *R) {
 
   unsigned long long ops;
   float time;
@@ -483,7 +484,6 @@ void stats (char* desc, int n, int thread, double *T, double *R) {
   printf("\n############################################\n");
   printf("  Test    = %s\n", desc);
   printf("  N       = %d\n", n);
-  printf("  Threads = %d\n", thread);
   printf("  Floating point OPS roughly = %llu\n", ops);
   printf("  Elapsed time dT            = %f\n", time);
   printf("  Rate = MegaOPS/dT          = %f\n", rate);
@@ -502,9 +502,8 @@ void help () {
   printf("Options:\n");
   printf("  -h\t\tPrint this help message.\n");
   printf("  -n <num>\tSize of N.\n");
-  printf("  -t <num>\tNumber of Threads.\n");
   printf("Examples:\n");
-  printf("linux> ./MatMultCUDA -n 1024 -t 8\n");
+  printf("linux> ./MatMultCUDA -n 1024\n");
 }
 
 
@@ -551,7 +550,7 @@ void getGPUStats (cudaDeviceProp &prop) {
 //--
 //-- global_cuda : use global memory on GPU to multiply two matracies
 //--
-void global_cuda (int n, int t, float *A, float *B, float *C) {
+void global_cuda (int n, float *A, float *B, float *C) {
 
   //-- initialize variables
   float *d_A; float *d_B; float *d_C;
@@ -576,8 +575,8 @@ void global_cuda (int n, int t, float *A, float *B, float *C) {
   cudaEventRecord(time_begin);
 
 
-  //-- Start the Kernal
-  global_cuda_kernal<<<DimGrid,DimBlock,SharedMemBytes>>>(n, d_A, d_B, d_C);
+  //-- Start the Kernel
+  global_cuda_kernel<<<DimGrid,DimBlock,SharedMemBytes>>>(n, d_A, d_B, d_C);
 
 
   //-- sync the threads
@@ -602,7 +601,7 @@ void global_cuda (int n, int t, float *A, float *B, float *C) {
 //--
 //-- shared_cuda : use shared memory on GPU to multiply two matracies
 //--
-void shared_cuda (int n, int t, float *A, float *B, float *C) {
+void shared_cuda (int n, float *A, float *B, float *C) {
 
   //-- initialize variables
   float *d_A; float *d_B; float *d_C;
@@ -628,8 +627,8 @@ void shared_cuda (int n, int t, float *A, float *B, float *C) {
   cudaEventRecord(time_begin);
 
 
-  //-- Start the Kernal
-  shared_cuda_kernal<<<DimGrid,DimBlock,SharedMemBytes>>>(n, d_A, d_B, d_C);
+  //-- Start the kernel
+  shared_cuda_kernel<<<DimGrid,DimBlock,SharedMemBytes>>>(n, d_A, d_B, d_C);
 
   //-- sync the threads
   cudaThreadSynchronize();

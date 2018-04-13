@@ -897,7 +897,7 @@ void naive_omp_s (int n, int t, double **A, double **B, double **C) {
   time_begin = omp_get_wtime();
 
   #pragma omp parallel	  \
-  shared (A, B, C, n)	\
+  shared (A, B, C, n)	    \
   private (i, j, k)
 
   #pragma omp for schedule(static)
@@ -930,7 +930,7 @@ void naive_omp_d (int n, int t, double **A, double **B, double **C) {
   time_begin = omp_get_wtime();
 
   #pragma omp parallel	  \
-  shared (A, B, C, n)	\
+  shared (A, B, C, n)	    \
   private (i, j, k)
 
   #pragma omp for schedule(dynamic,DYNAMC_CHUNK)
@@ -963,7 +963,7 @@ void naive_omp_g (int n, int t, double **A, double **B, double **C) {
   time_begin = omp_get_wtime();
 
   #pragma omp parallel	  \
-  shared (A, B, C, n)	\
+  shared (A, B, C, n)	    \
   private (i, j, k)
 
   #pragma omp for schedule(guided)
@@ -1022,7 +1022,7 @@ void optim_omp_s (int n, int t, double **A, double **B, double **C) {
   time_begin = omp_get_wtime();
 
   #pragma omp parallel		  \
-  shared (A, B, C, n)		\
+  shared (A, B, C, n)		    \
   private (i, j, k, r)
 
   for (k = 0; k < n; k++) {
@@ -1057,7 +1057,7 @@ void optim_omp_d (int n, int t, double **A, double **B, double **C) {
   time_begin = omp_get_wtime();
 
   # pragma omp parallel		  \
-  shared (A, B, C, n)		\
+  shared (A, B, C, n)		    \
   private (i, j, k, r)
 
   for (k = 0; k < n; k++) {
@@ -1092,7 +1092,7 @@ void optim_omp_g (int n, int t, double **A, double **B, double **C) {
   time_begin = omp_get_wtime();
 
   # pragma omp parallel	  	\
-  shared (A, B, C, n)		\
+  shared (A, B, C, n)		    \
   private (i, j, k, r)
 
   for (k = 0; k < n; k++) {
@@ -1162,9 +1162,9 @@ void block_omp_s (int n, int t, int b, double **A, double **B, double **C) {
   shared  (A, B, C, n, en)		\
   private (i, j, k, jj, kk, sum)
   for (kk = 0; kk < en; kk += b) {
+    #pragma omp for schedule(static)
     for (jj = 0; jj < en; jj += b) {
       for (i = 0; i < n; i++) {
-        #pragma omp for schedule(static)
         for (j = jj; j < jj+b; j++) {
           sum = A[i][j];
           for (k = kk; k < kk+b; k++) {
@@ -1181,9 +1181,9 @@ void block_omp_s (int n, int t, int b, double **A, double **B, double **C) {
 
 
 //--
-//-- block_omp_s : ijk based blocks with OpenMP
+//-- block_omp_d : ijk based blocks with OpenMP
 //--
-//-- notes : compromise of temporal and spatial locality with threading, static
+//-- notes : compromise of temporal and spatial locality with threading, dynamic
 //--
 void block_omp_d (int n, int t, int b, double **A, double **B, double **C) {
 
@@ -1221,9 +1221,9 @@ void block_omp_d (int n, int t, int b, double **A, double **B, double **C) {
 
 
 //--
-//-- block_omp_s : ijk based blocks with OpenMP
+//-- block_omp_g : ijk based blocks with OpenMP
 //--
-//-- notes : compromise of temporal and spatial locality with threading, static
+//-- notes : compromise of temporal and spatial locality with threading, guided
 //--
 void block_omp_g (int n, int t, int b, double **A, double **B, double **C) {
 
@@ -1242,8 +1242,8 @@ void block_omp_g (int n, int t, int b, double **A, double **B, double **C) {
   shared  (A, B, C, n, en)		\
   private (i, j, k, jj, kk, sum)
   for (kk = 0; kk < en; kk += b) {
+    #pragma omp for schedule(guided)
     for (jj = 0; jj < en; jj += b) {
-      #pragma omp for schedule(guided)
       for (i = 0; i < n; i++) {
         for (j = jj; j < jj+b; j++) {
           sum = A[i][j];
