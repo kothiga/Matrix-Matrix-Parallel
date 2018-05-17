@@ -3,15 +3,13 @@ Matrix Matrix Multiplication using Serial, OpenMP, and CUDA
 
 
 I thought this project was one of the more interesting things I have worked on
-in my bachelor degree here. This project required KNOWLEDGE from the entire
-semester. Having a strong knowledge on cache optimization, and how that alone can cause
-speed up.
+in my bachelor degree here. This project required KNOWLEDGE from the entire semester.
+Having a strong knowledge on cache optimization, and how that alone can cause speed up.
 
 During this project I spent a lot more time on the code than the report at the end.
-This in turn has led to a last minute submission (haha). I found running my code and
-watching how fast it ran to be "exciting" as it was also passing the validation I
-had implemented. This to me was convincing enough that the resulting matracies of
-each strategy produce CORRECT solutions.
+I found running my code and watching how fast it ran to be "exciting" as it was also
+passing the validation I had implemented. This to me was convincing enough that the
+resulting matracies of each strategy produce CORRECT solutions.
 
 I have included the Spreadsheet that contains all of the data I ran in these expirements.
 
